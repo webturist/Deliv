@@ -90,7 +90,7 @@ def show_entries():
             d.update({data:d[data][0]})
         d["city_out"] = d["city_out"].split(", ")
         d["city_in"] = d["city_in"].split(", ")
-        print(d)
+        
         
         if d["cargoType"]=="TiresWheels":
             k={}
@@ -112,7 +112,8 @@ def show_entries():
         satcost = sat.cost(d)
         #delcost = deliv.cost(d)
         meest = meest.cost(d)
-        
+        print(novapochta)
+        print(satcost)
         
                
         return render_template('show_entries.html', res=res, res2=res2,novapochta=novapochta ,d=d,satcost=satcost,meest=meest)     

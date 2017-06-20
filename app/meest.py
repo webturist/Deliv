@@ -195,10 +195,10 @@ def cost(d):
     
     sign.text = m.hexdigest()
     message = ET.tostring(root) # формируем XML документ в строку message
-    print(message)
+    #print(message)
     reparsed = minidom.parseString(message)
     dataXml = reparsed.toxml("utf-8").decode('utf-8')
-    print (dataXml)
+    #print (dataXml)
     
     resp = requests.post(
         API.urlcalck,

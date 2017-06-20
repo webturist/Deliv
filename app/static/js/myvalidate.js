@@ -1,24 +1,64 @@
 $(function() {
 	$.validator.addMethod( "lettersonly", function( value, element ) {
-		return this.optional( element ) || /^[А-Яа-яёЁЇїІіЄєҐґ',. ]+$/i.test( value );
+		return this.optional( element ) || /^[А-Яа-яёЁЇїІіЄєҐґ', .-\s]+$/i.test( value );
 	}, "Лише українські літери" );
+	$.validator.addMethod( "serchon", function( value, element ) {
+		return this.optional( element ) || /^[А-Яа-яёЁЇїІіЄєҐґ'-\s]{1,},\s[А-Яа-яёЁЇїІіЄєҐґ'-\s]{1,},\s[А-Яа-яёЁЇїІіЄєҐґ'-\s]{1,}$/i.test( value );
+	}, "Виберіть назву міста з випадаючого списку" );
 	
-	
-    	if ($("#cargoType").val() == "Cargo"){
-    		
-    	console.log("Argo")
-	
-    $("#ajax_form").validate({
-
-        rules: {
+	var global = {
+		
+		rules: {
         	city_out: {
                 required: true,
-                lettersonly:true
+                lettersonly:true,
+                serchon:true
             },
             city_in: {
                 required: true,
-                lettersonly:true
+                lettersonly:true,
+                serchon:true
             },
+            seats_amount: {
+                required: true,
+                digits: true,
+                minlength: 1,
+                min: 1
+            },
+            cost:{
+                required: true,
+                digits: true,
+                minlength: 1,
+                min: 1
+            }
+		},
+		messages: {
+        	city_out: {
+                required: "Введіть назву міста"
+            },
+            city_in: {
+                required: "Введіть назву міста"
+            },
+			seats_amount: {
+            	required: "Не менше 1 шт."
+            },
+            cost:{
+            	required: "Не менше 1 грн."
+            }
+		},
+		errorClass: "form-input_error",
+        validClass: "form-input_success"
+		
+		};
+	
+	
+   if ($("#cargoType").val() == "Cargo"){
+    //$( "#ajax_form" ).validate().destroy();
+	var cargo = {
+    	
+    	
+        rules: {
+        	
             weight: {
                 required: true,
                 digits: true,
@@ -42,28 +82,10 @@ $(function() {
                 digits: true,
                 minlength: 1,
                 min: 1
-            },
-            seats_amount: {
-                required: true,
-                digits: true,
-                minlength: 1,
-                min: 1
-            },
-            cost:{
-                required: true,
-                digits: true,
-                minlength: 1,
-                min: 1
             }
         },
         messages: {
-        	city_out: {
-                required: "Виберіть назву міста з випадаючого списку"
-            },
-            city_in: {
-                required: "Виберіть назву міста з випадаючого списку"
-            },
-            weight: {
+        	weight: {
 	         	required: "Вага не менше 0,1 кг"
 		 	},           
            
@@ -75,32 +97,21 @@ $(function() {
             },
             volumetricHeight: {
             	required: "Не менше 1 см"
-            },
-            seats_amount: {
-            	required: "Не менше 1 см"
-            },
-            cost:{
-            	required: "Не менше 1 грн."
             }
+            
         },
-        
-        
-        
-        
-        
-        
-        errorClass: "form-input_error",
-        validClass: "form-input_success"
-    });
+       
+    };
+    $.extend(true, cargo, global);
+    $("#ajax_form").validate(cargo);
     	
-    	}
+    }
       
     
     $("#cargoType").change(function(){
     	if ($("#cargoType").val() == "Pallet"){
     	$( "#ajax_form" ).validate().destroy();
-    	console.log("palette")
-		$("#ajax_form").validate({
+    	var pallet = {
 			rules: {
 				weight: {
 	                required: true,
@@ -151,12 +162,10 @@ $(function() {
 			            	min: "Не менше 50 см",
 			            	max: "Не більше 200 см"
 			            },		
-		 		},
-		 		
-		 		
-					errorClass: "form-input_error",
-			        validClass: "form-input_success"
-			});
+		 		}
+			};
+     $.extend(true, pallet, global);
+    $("#ajax_form").validate(pallet);
 		}
     });
     

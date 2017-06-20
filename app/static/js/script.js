@@ -38,7 +38,8 @@ $(function() {
     });
     // re-center map after place is selected from drop-down
     $("#out").on("typeahead:selected", function(eventObject, suggestion, name) {
-    
+    //suggestion.city.replace("&#x27;","'");    
+    //console.log(suggestion.City.replace("'","'"));
     });
 
    

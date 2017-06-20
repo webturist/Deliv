@@ -35,14 +35,16 @@ $(function() {
 	if ($("#cargoType").val() == "Documents"){
 			documents();}	*/	
 	});
-	/*console.log(JSON.stringify($("#ajax_form").serializeArray()));
-	$("#submit").click(function(){
+	
+	
+	$("form").submit(function(e){
+		e.preventDefault();
 	$.ajax({
 			type: "POST",
-			contentType: "application/json",
+			
 			url: Flask.url_for("show_entries"),
-			dataType : "json",
-			data : JSON.stringify($("#ajax_form").serializeArray()),
+			Type : "json",
+			data :$(this).serializeArray(),
 			success : function(result){
 			console.log("OK");
 			},
@@ -50,7 +52,7 @@ $(function() {
 				console.log(result);
 				}
 			});	
-		});	*/
+		});	
 });	
 
 
