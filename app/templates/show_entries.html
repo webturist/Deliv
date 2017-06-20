@@ -1,0 +1,126 @@
+{% extends "layout.html" %}
+{% block body %}
+<form  action="" id="ajax_form" method="post" class="add-entry">
+     <div class="next">
+			<div class="form-group">
+			
+			<input class="form-control" autofocus id="out" type="text" autocomplete="off" size="30" name="city_out" placeholder="Місце відправлення" minlength="3" required/>
+						
+			</div>
+        <div class="form-group">
+		
+        <input class="form-control" autocomplete="off" id="in" type="text" size="30" name="city_in" placeholder="Місце отримання" minlength="3" required/>
+		
+		</div>
+		</div>
+	
+	
+        
+			<div class="delivery_block">
+				<div class="form-group">
+					<label class="valid" for="ServiceType">Тип послуги</label>
+						<select class="form-control" name="ServiceType" id="ServiceType"> <!--выпадающий список-->
+					<!--<select name="DeliveryForm" size=3> <!--список с прокруткой-->
+
+							<option value="DoorsDoors">Адреса-Адреса</option>
+							<option value="DoorsWarehouse">Адреса-Відділення</option>
+							<option value="WarehouseDoors">Відділення-Адреса</option>
+							<option value="WarehouseWarehouse">Відділення-Відділення</option>
+	 
+					</select>
+				</div>
+				<div class="form-group">
+					<label class="valid" for="cargoType">Вид відправлення</label>
+						<select class="form-control" name="cargoType" id="cargoType">
+							<option value="Cargo">Посилки та вантажі</option>
+							<option value="Documents">Документи</option>
+							<option value="TiresWheels">Шини та диски</option>
+							<option value="Pallet">Палети</option>
+		
+						</select>		
+				</div>
+			</div>
+   	
+        <div id = "tyres" >
+        	<!--<div class="form-inline">
+			<dt class="form-group" >
+			<input class="form-control" type="text" size="30" name="weight" placeholder="Вага 1 місця"/></dt>
+			<dt class="form-group" >
+			<input class="form-control" type="text" size="30" name="volumetricLength" placeholder="Довжина 1 місця, см"/></dt>
+			<dt class="form-group" >
+			<input class="form-control" type="text" size="30" name="volumetricWidth" placeholder="Ширина 1 місця, см"/></dt>
+			<dt class="form-group" >
+			<input class="form-control" type="text" size="30" name="volumetricHeight" placeholder="Висота 1 місця, см"/></dt>
+			
+			</div>-->
+			
+			</div>
+			<div class="next">
+		<div class="form-group" >
+			<input class="form-control" type="text" size="30" name="cost" placeholder="Загальна вартість"/></div>	</div>
+			<div class="clear" style="clear: both;"></div>
+			
+		<button id="plus" class="btn btn-default" type="button">&#10010;</button>
+		
+    <button id="submit" class="btn btn-default" type="submit">Поиск</button>
+       
+ </form>
+    
+ <div>{{city_out}}</div>
+{% if res %}
+<div>
+<p>Отправление {{res["MainDescription"]}}
+{{res["Area"]}}
+{{res["Region"]}}</p>
+<p>Получение {{res2["MainDescription"]}}
+{{res2["Area"]}}
+{{res2["Region"]}}</p>
+<p>вес  {{d["weight"]}}
+</p>
+<p>Длинна  {{ d["volumetricLength"]}}
+</p>
+<p>
+Ширина  {{ d["volumetricWidth"]}}
+      
+</p>
+<p>Высота  {{d["volumetricHeight"]}}
+</p>
+<p>мест  {{d["seats_amount"]}}</p>
+{{d["cost"]}}
+</div>
+<div>
+Стоимость доставки Нова пошта{{novapochta["Cost"]}} грн.
+</div>
+<div>
+Стоимость доставки SAT{{satcost["cost"]}} грн.
+</div>
+
+<div>
+Стоимость доставки Delivery
+</div>
+
+<div>
+Стоимость доставки MEEST {{meest["PriceOfDelivery"]}}  грн.
+
+</div>
+
+{% endif %}
+  {% if session.logged_in %}
+    <form action="{{ url_for('add_entry') }}" method="post" class="add-entry">
+      <dl>
+        <dt>Title:
+        <dd><input type="text" size="30" name="title">
+        <dt>Text:
+        <dd><textarea name="text" rows="5" cols="40"></textarea>
+        <dd><input type="submit" value="Share">
+      </dl>
+    </form>
+  {% endif %}
+  <ul class="entries">
+  {% for entry in entries %}
+    <li><h2>{{ entry.title }}</h2>{{ entry.text|safe }}</li>
+  {% else %}
+    <li><em>Unbelievable.  No entries here so far</em></li>
+  {% endfor %}
+  </ul>
+{% endblock %}
