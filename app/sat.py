@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 import requests
 import json
 import re
-from app.reserch import Code
+from app.reserch import Coder
 class API:
     api = {"apiKey": ""}
     url = 'http://urm.sat.ua/openws/hs/api/v1.0/calc/json'
@@ -60,8 +62,7 @@ def cost(d):
                 })
   
     if d["cargoType"]=="Pallet":
-        if d["seats_amount"] == "" or d["seats_amount"] == None:
-            d["seats_amount"] = "1" 
+         
         try:
             width = int(d["volumetricWidth"])*int(d["seats_amount"])
             weight = int(d["weight"])*int(d["seats_amount"])

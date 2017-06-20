@@ -1,0 +1,42 @@
+﻿  <div class="left">
+     <h3>Розрахункова вартість доставки</h3>
+ </div>
+
+<table class="table table-hover"> 
+<thead> 
+<tr> 
+<th>#
+</th>
+ <th>Служба доставки</th> 
+ <th>Вартість</th> 
+ <th>інше</th> </tr>
+  </thead>
+   <tbody> 
+   <tr class="active"> 
+   <th scope="row">1</th>
+    <td>Нова пошта</td>
+     <td>{{result["nova"]["Cost"]}} грн.*</td>
+      <td>Column content</td> 
+      </tr> 
+      <tr class="danger"> <th scope="row">2</th> 
+      <td>SAT</td>
+       <td>{{result["sat"]["cost"]}} грн.*</td> 
+       <td>Column content</td> </tr>
+        <tr class="success"> 
+        <th scope="row">3</th> 
+        <td>Міст експресс</td>
+         <td>{{result["meest"]["PriceOfDelivery"]}} грн.*</td> 
+         <td>Column content</td> </tr> 
+         <tr class="warning"> <th scope="row">4</th>
+          <td>Делівері</td> 
+          <td>{{result["delivery"]["allSumma"]}} грн.*</td> 
+          <td>Column content</td> </tr>
+           <tr class="info"> 
+           <th scope="row">5</th> 
+           <td>Column content</td> 
+           <td>Column content</td>
+            <td>Column content</td> </tr> 
+            
+                     </tbody> 
+                     
+                     <span>* Остаточна вартість перевезення може відрізнятися від розрахованої</span>

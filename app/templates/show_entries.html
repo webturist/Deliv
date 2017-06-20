@@ -66,45 +66,11 @@
        
  </form>
     
- <div>{{city_out}}</div>
-{% if res %}
-<div>
-<p>Отправление {{res["MainDescription"]}}
-{{res["Area"]}}
-{{res["Region"]}}</p>
-<p>Получение {{res2["MainDescription"]}}
-{{res2["Area"]}}
-{{res2["Region"]}}</p>
-<p>вес  {{d["weight"]}}
-</p>
-<p>Длинна  {{ d["volumetricLength"]}}
-</p>
-<p>
-Ширина  {{ d["volumetricWidth"]}}
-      
-</p>
-<p>Высота  {{d["volumetricHeight"]}}
-</p>
-<p>мест  {{d["seats_amount"]}}</p>
-{{d["cost"]}}
-</div>
-<div>
-Стоимость доставки Нова пошта{{novapochta["Cost"]}} грн.
-</div>
-<div>
-Стоимость доставки SAT{{satcost["cost"]}} грн.
-</div>
+ <div id="result">
+ </div>
 
-<div>
-Стоимость доставки Delivery
-</div>
 
-<div>
-Стоимость доставки MEEST {{meest["PriceOfDelivery"]}}  грн.
 
-</div>
-
-{% endif %}
   {% if session.logged_in %}
     <form action="{{ url_for('add_entry') }}" method="post" class="add-entry">
       <dl>

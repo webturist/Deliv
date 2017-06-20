@@ -3,7 +3,7 @@
 import requests
 import json
 import re
-from app.reserch import Code
+from app.reserch import Coder
 class API:
     api = {"apiKey": ""}
     url = 'http://www.delivery-auto.com/api/v4/Public/PostReceiptCalculate'
@@ -27,63 +27,64 @@ def resp_add(city):
         
 
 def cost(d):
-    if d["cost"] and (int(d["cost"]) > 0 and int(d["cost"])) <1001:
-        d["cost"] = 1001
+    arr = d.copy()
+    if arr["cost"] and (int(arr["cost"]) > 0 and int(arr["cost"])) <1001:
+        arr["cost"] = 1001
     cost = {        
          "culture": "uk-UA",
-         "areasSendId": resp_add(d["city_out"])["id"],
-         "areasResiveId": resp_add(d["city_in"])["id"],
-         "InsuranceValue": d["cost"]
+         "areasSendId": resp_add(arr["city_out"])["id"],
+         "areasResiveId": resp_add(arr["city_in"])["id"],
+         "InsuranceValue": arr["cost"]
         }
    
-    if d["ServiceType"] == "DoorsDoors":
+    if arr["ServiceType"] == "DoorsDoors":
         cost.update({"deliveryScheme":1})
-    elif d["ServiceType"] == "DoorsWarehouse":
+    elif arr["ServiceType"] == "DoorsWarehouse":
         cost.update({"deliveryScheme":3})        
-    elif d["ServiceType"] == "WarehouseDoors":
+    elif arr["ServiceType"] == "WarehouseDoors":
         cost.update({"deliveryScheme":2})
     else:
         cost.update({"deliveryScheme":0})    
     
-    if d["cargoType"]=="TiresWheels":
+    if arr["cargoType"]=="TiresWheels":
         cost.update({"category": []})
-        for data in d:
-            if re.search(Code.tires, data):
+        for data in arr:
+            if re.search(Coder.tires, data):
                 if data == "20f7b625-9add-11e3-b441-0050568002cf" or data == "d7c456cd-aa8b-11e3-9fa0-0050568002cf":
                     cost["category"].append({"categoryId": "f35b5c7d-0cbc-40a0-9713-005142732fc8",
-                                              "countPlace": d[data],}) #вантажна R 22,5
+                                              "countPlace": arr[data],}) #вантажна R 22,5
                 elif data == "20f7b628-9add-11e3-b441-0050568002cf" or data == "d7c456cc-aa8b-11e3-9fa0-0050568002cf":
                     cost["category"].append({"categoryId": "b9cdeb6b-ea2b-48c9-94a1-ef40d426503c",
-                                              "countPlace": d[data],}) #вантажна R 20
+                                              "countPlace": arr[data],}) #вантажна R 20
                 elif data == "20f7b627-9add-11e3-b441-0050568002cf" or data == "d7c456cb-aa8b-11e3-9fa0-0050568002cf":
                     cost["category"].append({"categoryId": "87c83a1e-bb1d-4fc2-b047-8600fc60df16",
-                                              "countPlace": d[data],})#вантажна R 19,5
+                                              "countPlace": arr[data],})#вантажна R 19,5
                 elif data == "20f7b626-9add-11e3-b441-0050568002cf" or data == "d7c456ca-aa8b-11e3-9fa0-0050568002cf":
                     cost["category"].append({"categoryId": "83d6f316-94a2-446f-8966-a4eb240be3ba",
-                                              "countPlace": d[data],}) #вантажна R 17,5
+                                              "countPlace": arr[data],}) #вантажна R 17,5
                 elif data == "d7c456c5-aa8b-11e3-9fa0-0050568002cf" or data == "d7c456cf-aa8b-11e3-9fa0-0050568002cf": 
                     cost["category"].append({"categoryId": "ef32f833-e648-e211-ab75-00155d012d0d",
-                                              "countPlace": d[data],}) #легкова R 13-14
+                                              "countPlace": arr[data],}) #легкова R 13-14
                 elif data == "d7c456d0-aa8b-11e3-9fa0-0050568002cf" or data == "d7c456c6-aa8b-11e3-9fa0-0050568002cf":
                     cost["category"].append({"categoryId": "38475e48-e648-e211-ab75-00155d012d0d",
-                                              "countPlace": d[data],}) #легкова R 15-16
+                                              "countPlace": arr[data],}) #легкова R 15-16
                 elif data == "d7c456c7-aa8b-11e3-9fa0-0050568002cf" or data == "d7c456d1-aa8b-11e3-9fa0-0050568002cf": 
                     cost["category"].append({"categoryId": "3556f95e-e648-e211-ab75-00155d012d0d",
-                                              "countPlace": d[data],}) #легковые R17,5-19
+                                              "countPlace": arr[data],}) #легковые R17,5-19
                 else:
                     cost["category"].append({"categoryId": "112ead71-e648-e211-ab75-00155d012d0d",
-                                              "countPlace": d[data],}) #легковые R19,5-22    
+                                              "countPlace": arr[data],}) #легковые R19,5-22    
                         
         
-    if d["cargoType"]=="Pallet":
+    if arr["cargoType"]=="Pallet":
         try:
-            v = int(d["seats_amount"])*int(d["volumetricWidth"])*int(d["volumetricLength"])*int(d["volumetricHeight"])/1000000
-            w = int(d["seats_amount"])*int(d["weight"])
+            v = int(arr["seats_amount"])*int(arr["volumetricWidth"])*int(arr["volumetricLength"])*int(arr["volumetricHeight"])/1000000
+            w = int(arr["seats_amount"])*int(arr["weight"])
         except:
             v = 0 
-        if int(d["volumetricWidth"]) <= 80 or int(d["volumetricLength"]) <= 80:
+        if int(arr["volumetricWidth"]) <= 80 or int(arr["volumetricLength"]) <= 80:
             categoryId = "07dd5789-e648-e211-ab75-00155d012d0d"
-        elif int(d["volumetricWidth"]) <= 100 or int(d["volumetricLength"]) <= 100:     
+        elif int(arr["volumetricWidth"]) <= 100 or int(arr["volumetricLength"]) <= 100:     
             categoryId = "62c7b796-e648-e211-ab75-00155d012d0d"
         else:
             categoryId = "e9e885b1-e648-e211-ab75-00155d012d0d"    
@@ -91,38 +92,38 @@ def cost(d):
         cost.update({"category": 
                     [{
              "categoryId": categoryId,
-             "countPlace": d["seats_amount"],
+             "countPlace": arr["seats_amount"],
             "helf": w,
             "size": v
              }]    
              })          
                   
-    if d["cargoType"]=="Cargo":
+    if arr["cargoType"]=="Cargo":
         try:
-            v = int(d["volumetricWidth"])*int(d["volumetricLength"])*int(d["volumetricHeight"])/1000000
-            #d["weight"]=int(d["weight"])/int(d["seats_amount"])
+            v = int(arr["volumetricWidth"])*int(arr["volumetricLength"])*int(arr["volumetricHeight"])/1000000
+            #arr["weight"]=int(arr["weight"])/int(arr["seats_amount"])
         except:
             v = 0
         cost.update({"category": 
                     [{
              "categoryId": "00000000-0000-0000-0000-000000000000",
-             "countPlace": d["seats_amount"],
-            "helf": d["weight"],
+             "countPlace": arr["seats_amount"],
+            "helf": arr["weight"],
             "size": v
              }]    
              })   
         
-    if d["cargoType"]=="Documents":
+    if arr["cargoType"]=="Documents":
         cost.update({"category": 
                     [{
              "categoryId": "ebe885b1-e648-e211-ab75-00155d012d0d",
-             "helf": d["weight"]
+             "helf": arr["weight"]
              }]    
              })   
               
             
     
-    print(cost)
+    #print(cost)
     resp = requests.post(
         API.url,
         json.dumps(cost),
@@ -130,7 +131,7 @@ def cost(d):
         ) 
     if resp.json()["status"]:
         data = resp.json()["data"]
-        print(data)
+        #print(data)
         return data
     else:
         return None

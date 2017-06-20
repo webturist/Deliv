@@ -1,10 +1,12 @@
+# -*- coding: utf-8 -*-
+
 import requests
 import xml.etree.ElementTree as ET
 import hashlib
 from xml.dom import minidom
 from app.recipe import XmlDictConfig
 import re
-from app.reserch import Code
+from app.reserch import Coder
 
 class API:
     login = "AkhtyrtsevHennadiyAnatoliyovych"
@@ -49,6 +51,7 @@ def resp_add(city):
     return xmldict["result_table"]["items"]
 
 def cost(d):
+    
     root = ET.Element("param")
     login = ET.SubElement(root, "login") 
     login.text = API.login 
@@ -95,7 +98,7 @@ def cost(d):
     if d["cargoType"]=="TiresWheels":
         
         for data in d:
-            if re.search(Code.tires, data):
+            if re.search(Coder.tires, data):
                 Places_items = ET.SubElement(CalculateShipment, "Places_items")
                 SendingFormat = ET.SubElement(Places_items, "SendingFormat")
                 Quantity = ET.SubElement(Places_items, "Quantity")

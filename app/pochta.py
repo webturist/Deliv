@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 import requests
 import json
 import re
-from app.reserch import Code
+from app.reserch import Coder
 
 class API:
     api = {"apiKey": "8c4d695c530e963968190af84ded7bc8"}
@@ -30,6 +31,7 @@ def resp_add(city):
             
     
 def cost(d):
+    
     cost = {
         "modelName": "InternetDocument",
         "calledMethod": "getDocumentPrice",
@@ -47,7 +49,7 @@ def cost(d):
     if d["cargoType"]=="TiresWheels":
         k=[]
         for data in d:
-            if re.search(Code.tires, data):
+            if re.search(Coder.tires, data):
                 k.append({"CargoDescription":data,"Amount": d[data]})           
         
         cost["methodProperties"].update({"CargoDetails": k})
@@ -97,8 +99,7 @@ def cost(d):
         data = resp.json()["data"][0]
         return data
     else:
-        print("pochta error")    
-        
-if __name__ == '__main__':
-    resp_add(['Супина', 'Царичанський', 'Дніпропетровська'])            
+        print("pochta error")
+        return None
+         
     

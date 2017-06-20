@@ -109,7 +109,7 @@ $(function() {
       
     
     $("#cargoType").change(function(){
-    	if ($("#cargoType").val() == "Pallet"){
+    	if ($(this).val() == "Pallet"){
     	$( "#ajax_form" ).validate().destroy();
     	var pallet = {
 			rules: {
@@ -168,6 +168,31 @@ $(function() {
     $("#ajax_form").validate(pallet);
 		}
     });
+    
+    
+    $("#cargoType").change(function(){
+    	if ($(this).val() == "Documents"){
+    	$( "#ajax_form" ).validate().destroy();
+    	var Documents = {
+						
+			};
+     $.extend(true, Documents, global);
+    $("#ajax_form").validate(Documents);
+		}
+    });
+    
+
+    $("#cargoType").change(function(){
+    	if ($(this).val() == "TiresWheels"){
+    	$( "#ajax_form" ).validate().destroy();
+    	var TiresWheels = {
+			
+			};
+     $.extend(true, TiresWheels, global);
+    $("#ajax_form").validate(TiresWheels);
+		}
+    });
+    
     
 
 });

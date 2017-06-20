@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import requests
 import xml.etree.ElementTree as ET
 import hashlib
@@ -58,7 +60,7 @@ def resp_add(city):
                  "SOAPAction":"http://www.reality.sh/in-time/Api20#API20:AllCatalog",
                  "Connection": "Keep-Alive"},
         ) 
-    print(resp.text)
+    #print(resp.text)
     root = ET.XML(resp.text)
     xmldict = XmlDictConfig(root) 
     print(xmldict)

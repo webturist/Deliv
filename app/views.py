@@ -15,7 +15,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 from flask_jsglue import JSGlue     
 from contextlib import closing 
 import re 
-from app.reserch import Code
+from app.reserch import Coder
 import app.pochta as pochta
 import app.sat as sat
 import app.deliv as deliv
@@ -79,9 +79,7 @@ def show_entries():
     db = get_db()
     cur = db.execute('select title, text from entries order by id desc')
     entries = cur.fetchall()
-    res = {}
-    res2 ={}
-    
+        
     if request.method == "POST":
         #print(request.get_json)
         d =dict(request.form)
@@ -95,7 +93,7 @@ def show_entries():
         if d["cargoType"]=="TiresWheels":
             k={}
             for data in d:
-                if not re.search(Code.tires, data):
+                if not re.search(Coder.tires, data):
                     k.update({data:d[data]})
                 elif d[data]:
                     k.update({data:d[data]})
@@ -103,22 +101,24 @@ def show_entries():
             del k                          
             
         print(d)
-        res = pochta.resp_add(d["city_out"])
-        res2 = pochta.resp_add(d["city_in"]) 
-        
-        global meest
-             
+            
+                    
         novapochta = pochta.cost(d)
         satcost = sat.cost(d)
-        #delcost = deliv.cost(d)
-        meest = meest.cost(d)
+        meestex = meest.cost(d)
+        delcost = deliv.cost(d)
+        
         print(novapochta)
         print(satcost)
+        print(meestex)
+        print(delcost)
         
-               
-        return render_template('show_entries.html', res=res, res2=res2,novapochta=novapochta ,d=d,satcost=satcost,meest=meest)     
+        result = {"nova" :novapochta,"sat":satcost, "meest":meestex,"delivery":delcost}
+            
+              
+        return render_template('result.html', d=d,result=result)     
     else:
-        return render_template('show_entries.html', entries=entries,res=res,res2=res2)
+        return render_template('show_entries.html', entries=entries)
 
 @app.route("/search", methods=['GET'])
 def search():

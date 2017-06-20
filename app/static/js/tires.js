@@ -1,4 +1,7 @@
 $(function() {
+	
+
+	
 		if ($("#cargoType").val() == "TiresWheels"){
 		tiresWheels();
 		}
@@ -39,19 +42,27 @@ $(function() {
 	
 	$("form").submit(function(e){
 		e.preventDefault();
-	$.ajax({
-			type: "POST",
+		if ($("#ajax_form").valid()){
+			$("#loading").addClass("loading");
+			$.ajax({
+				type: "POST",
+				
+				url: Flask.url_for("show_entries"),
+				Type : "json",
+				data :$(this).serializeArray(),
+				success : function(result){
+				$("#loading").removeClass("loading");	
+				$("#result").html(result);
+				},
+				error : function(result){
+					console.log(result);
+					}
+				});
 			
-			url: Flask.url_for("show_entries"),
-			Type : "json",
-			data :$(this).serializeArray(),
-			success : function(result){
-			console.log("OK");
-			},
-			error : function(result){
-				console.log(result);
-				}
-			});	
+	      	}
+		else {
+			return false;
+		}
 		});	
 });	
 
@@ -93,11 +104,11 @@ function pallet(){
 			$("#tyres > div").addClass("form-inline");
 			var s = $( "#tyres > div" ).length;
 			if (s <=4){
-			var arr = {"weight":"Вага палети",
-			"volumetricLength":"Довжина палети",
-			"volumetricWidth":"Ширина палети",
-			"volumetricHeight":"Висота палети",
-			"seats_amount":"Кількість"}
+			var arr = {"weight":"Вага палети, кг",
+			"volumetricLength":"Довжина палети, см",
+			"volumetricWidth":"Ширина палети, см",
+			"volumetricHeight":"Висота палети, см",
+			"seats_amount":"Кількість, шт"}
 			
 			var i = 0;
 			
@@ -113,7 +124,7 @@ function pallet(){
 
 function cargo(){
 			$("#plus").hide();
-			var arr = {"weight":"Загальна вага","volumetricLength":"Загальна довжина, см","volumetricWidth":"Загальна ширина, см","volumetricHeight":"Загальна висота, см","seats_amount":"Кількість місць"}
+			var arr = {"weight":"Загальна вага, кг","volumetricLength":"Загальна довжина, см","volumetricWidth":"Загальна ширина, см","volumetricHeight":"Загальна висота, см","seats_amount":"Кількість місць, шт"}
 			var i = 0;
 			
 			$("#tyres").append("<div>");
@@ -130,17 +141,23 @@ function cargo(){
 };
 function documents(){
 			$("#plus").hide();
-			var arr = {"weight":"Загальна вага","seats_amount":"Кількість"}
+			var arr = {"Вага від 0,5 до 1 кг":1, "Вага від 0,1 до 0,5 кг":0.5, "Вага до 0,1 кг":0.1};
 			var i = 0;
 			
 			$("#tyres").append("<div>");
 			$("#tyres > div").addClass("form-inline");
 			
-			for(code in arr){
-			$("#tyres > div:last").append("<input>");
-			$("#tyres > div:last > input:eq({i})".replace("{i}", i)).addClass("form-control").attr({"type":"text", "size":30, "name":code,"placeholder":arr[code]});
-			i++;
+			$("#tyres > div:last").append("<select>");
+			$("#tyres > div:last > select").addClass("form-control").attr({"name":"weight","id":"docweight"});
+			for (value in arr){
+				$("#tyres > div:last > select").append("<option>");
+				$("#tyres > div:last > select > option:eq({i})".replace("{i}", i)).attr({"value":arr[value]}).html(value);
+				i++;
 			}
+			
+			$("#tyres > div:last").append("<input>");
+			$("#tyres > div:last > input").addClass("form-control").attr({"type":"text", "size":30, "name":"seats_amount","placeholder":"Кількість, шт"});
+			
 			$("#tyres > div > input").wrap("<dt>");
 			$("#tyres > div > dt").addClass("form-group   myform");
 

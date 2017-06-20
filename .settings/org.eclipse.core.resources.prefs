@@ -1,12 +1,15 @@
 eclipse.preferences.version=1
 encoding//app/deliv.py=utf-8
-encoding//app/meest.py=UTF-8
+encoding//app/intime.py=utf-8
+encoding//app/meest.py=utf-8
+encoding//app/pochta.py=utf-8
 encoding//app/reserch.py=UTF-8
+encoding//app/sat.py=utf-8
 encoding//app/static/js/script.js=UTF-8
 encoding//app/static/js/tires.js=UTF-8
-encoding//app/templates/delivery.html=UTF-8
 encoding//app/templates/layout.html=UTF-8
 encoding//app/templates/login.html=UTF-8
+encoding//app/templates/result.html=UTF-8
 encoding//app/templates/show_entries.html=UTF-8
 encoding//app/views.py=utf-8
 encoding/<project>=UTF-8
