@@ -167,8 +167,8 @@ def cost(d):
         
         if d["cargoType"]=="Documents":
             SendingFormat.text = "DOX"
-            Weight.text = str(int(d["weight"])/int(d["seats_amount"]))
-            Insurance.text = str(int(d["cost"]) + 0.01)
+            Weight.text = d["weight"]
+            Insurance.text = str(int(d["cost"]) + 1)
             Volume.text = "0.001" 
             
         if d["cargoType"]=="Cargo":
@@ -213,3 +213,11 @@ def cost(d):
     xmldict = XmlDictConfig(root) 
     print(xmldict)
     return xmldict["result_table"]["items"]
+    
+if __name__ == '__main__':
+    cost({'ServiceType': 'DoorsDoors',
+    'city_out': ['Суми', 'Сумська', 'Сумська'], 
+    'cost': '1', 'city_in': ['Київ', 'Київ', 'Київська'], 
+    'seats_amount': '1', 
+    'weight': '1',
+    'cargoType': 'Documents'})

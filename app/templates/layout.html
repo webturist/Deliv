@@ -1,6 +1,8 @@
 <!doctype html>
-<title>Flaskr</title>
+<title>Search for delivery</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='validate.css') }}">
 
@@ -32,7 +34,7 @@
                         <button aria-expanded="false" class="navbar-toggle collapsed" data-target="#navbar" data-toggle="collapse" type="button">
                             <span class="sr-only">Toggle navigation</span>
                                                     </button>
-                        <a class="navbar-brand" href=""><span class="red">Flaskr</span></a>
+                        <a class="navbar-brand" href=""><span class="red">Search for delivery</span></a>
       				</div>
       				<div class="collapse navbar-collapse" id="navbar">
                         {% if session.user_id %}
@@ -61,7 +63,21 @@
   {% for message in get_flashed_messages() %}
     <div class="alert alert-info">{{ message }}</div>
   {% endfor %}
+  
+  
+  {% if session.logged_in %}
+    <form action="{{ url_for('add_entry') }}" method="post" class="add-entry">
+      <dl>
+        <dt>Title:
+        <dd><input type="text" size="30" name="title">
+        <dt>Text:
+        <dd><textarea name="text" rows="5" cols="40"></textarea>
+        <dd><input type="submit" value="Share">
+      </dl>
+    </form>
+  {% endif %}
   {% block body %}{% endblock %}
 </div>
 <div id="loading" >
+    <img alt='loading' src='/static/loading.gif'/>
 </div>
