@@ -55,6 +55,8 @@ $(function() {
 				$("#result").html(result);
 				},
 				error : function(result){
+					$("#loading").removeClass("loading");
+					$("#result").html("Виникла помилка, спробуйте ще");
 					console.log(result);
 					}
 				});
