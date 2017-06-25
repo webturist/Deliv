@@ -115,7 +115,7 @@ def cost(d):
                     #вантажна R 17,5
                 if data == "d7c456c5-aa8b-11e3-9fa0-0050568002cf" or data == "d7c456cf-aa8b-11e3-9fa0-0050568002cf": 
                     SendingFormat.text = "R14"   #легкова R 13-14
-                    Volume.text = "0.1"
+                    Volume.text = "0.001"
                     Weight.text = "6"
                     Quantity.text = d[data]
                     Insurance.text = str(int(d[data])*int(d["cost"])/len(d) + 0.01)
@@ -151,13 +151,13 @@ def cost(d):
                 w = int(d["seats_amount"])*int(d["weight"])
             except:
                 v = 0 
-            if int(d["weight"]) > 100 and int(d["weight"]) <= 500:
+            if int(d["weight"]) > 200 and int(d["weight"]) <= 500:
                 SendingFormat.text = "PL5"
             elif int(d["weight"]) > 500 and int(d["weight"]) <= 750:     
                 SendingFormat.text = "PL7"
             elif int(d["weight"]) > 750 and int(d["weight"]) <= 1000:     
                 SendingFormat.text = "PL1" 
-            if  int(d["weight"]) > 1000:
+            elif  int(d["weight"]) > 1000:
                 SendingFormat.text = "NST"      
             if int(d["cost"])*int(d["seats_amount"]) < 5000*int(d["seats_amount"]):
                 Insurance.text = str(5000*int(d["seats_amount"]))
@@ -167,7 +167,7 @@ def cost(d):
         
         if d["cargoType"]=="Documents":
             SendingFormat.text = "DOX"
-            Weight.text = d["weight"]
+            Weight.text = str(float(d["weight"])*int(d["seats_amount"]))
             Insurance.text = str(int(d["cost"]) + 1)
             Volume.text = "0.001" 
             
@@ -176,18 +176,14 @@ def cost(d):
                 v = int(d["volumetricWidth"])*int(d["volumetricLength"])*int(d["volumetricHeight"])/1000000
             except:
                 v = 0
-            if v < 0.012:
-                SendingFormat.text = "DOX"
-                Weight.text = str(int(d["weight"])/int(d["seats_amount"]))
-                Volume.text = str(v)          
-            elif v <= 1.44 and int(d["weight"]) <= 250:
+            if v/int(d["seats_amount"]) <= 1.44 and int(d["weight"])/int(d["seats_amount"]) <= 250:
                 SendingFormat.text = "PAX"
                 Volume.text = str(v)
-                Weight.text =  str(int(d["weight"])/int(d["seats_amount"]))
+                Weight.text =  d["weight"]
             else:
                 SendingFormat.text = "NST"
                 Volume.text = str(v)
-                Weight.text =  str(int(d["weight"])/int(d["seats_amount"]))  
+                Weight.text = d["weight"]  
             Insurance.text = str(int(d["cost"]) + 0.01)
             
     sign = ET.SubElement(root, "sign")
@@ -201,7 +197,7 @@ def cost(d):
     #print(message)
     reparsed = minidom.parseString(message)
     dataXml = reparsed.toxml("utf-8").decode('utf-8')
-    #print (dataXml)
+    print (dataXml)
     
     resp = requests.post(
         API.urlcalck,
@@ -212,12 +208,11 @@ def cost(d):
     root = ET.XML(resp.text)
     xmldict = XmlDictConfig(root) 
     print(xmldict)
-    return xmldict["result_table"]["items"]
+    if xmldict["result_table"] == "\n":
+        print(xmldict["errors"]["name"].partition("ua:")[2].replace("]",""))
+        return xmldict["errors"]["name"].partition("ua:")[2].replace("]","")
+    else:
+        return xmldict["result_table"]["items"]["PriceOfDelivery"]+" грн. *"
     
 if __name__ == '__main__':
-    cost({'ServiceType': 'DoorsDoors',
-    'city_out': ['Суми', 'Сумська', 'Сумська'], 
-    'cost': '1', 'city_in': ['Київ', 'Київ', 'Київська'], 
-    'seats_amount': '1', 
-    'weight': '1',
-    'cargoType': 'Documents'})
+    cost()

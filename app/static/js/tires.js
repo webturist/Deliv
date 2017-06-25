@@ -95,6 +95,7 @@ function tiresWheels(){
 			$("#tyres").html(content);
 			
 				},error : function(result){
+					
 				console.log(result);
 				}
 			});	

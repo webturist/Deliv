@@ -79,44 +79,46 @@ def show_entries():
     db = get_db()
     cur = db.execute('select title, text from entries order by id desc')
     entries = cur.fetchall()
-        
     if request.method == "POST":
-        #print(request.get_json)
-        d =dict(request.form)
-        
-        for data in d:
-            d.update({data:d[data][0]})
-        d["city_out"] = d["city_out"].split(", ")
-        d["city_in"] = d["city_in"].split(", ")
-        
-        
-        if d["cargoType"]=="TiresWheels":
-            k={}
+        try:
+            #print(request.get_json)
+            d =dict(request.form)
+            
             for data in d:
-                if not re.search(Coder.tires, data):
-                    k.update({data:d[data]})
-                elif d[data]:
-                    k.update({data:d[data]})
-            d=k
-            del k                          
+                d.update({data:d[data][0]})
+            d["city_out"] = d["city_out"].split(", ")
+            d["city_in"] = d["city_in"].split(", ")
             
-        print(d)
             
-                    
-        novapochta = pochta.cost(d)
-        satcost = sat.cost(d)
-        meestex = meest.cost(d)
-        delcost = deliv.cost(d)
-        
-        print(novapochta)
-        print(satcost)
-        print(meestex)
-        print(delcost)
-        
-        result = {"nova" :novapochta,"sat":satcost, "meest":meestex,"delivery":delcost}
+            if d["cargoType"]=="TiresWheels":
+                k={}
+                for data in d:
+                    if not re.search(Coder.tires, data):
+                        k.update({data:d[data]})
+                    elif d[data]:
+                        k.update({data:d[data]})
+                d=k
+                del k                          
+                
+            print(d)
+                
+                        
+            novapochta = pochta.cost(d)
+            satcost = sat.cost(d)
+            meestex = meest.cost(d)
+            delcost = deliv.cost(d)
             
-              
-        return render_template('result.html', d=d,result=result)     
+            print(novapochta)
+            print(satcost)
+            print(meestex)
+            print(delcost)
+            
+            result = {"nova" :novapochta,"sat":satcost, "meest":meestex,"delivery":delcost}
+                
+                  
+            return render_template('result.html', d=d,result=result)
+        except:
+            return  render_template('404.html')        
     else:
         return render_template('show_entries.html', entries=entries)
 

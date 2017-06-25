@@ -63,25 +63,30 @@ $(function() {
                 required: true,
                 digits: true,
                 minlength: 1,
-                min: 0.1
+                min: 0.1,
+                max: 9999
+                
             },
             volumetricLength: {
                 required: true,
                 digits: true,
                 minlength: 1,
-                min: 1
+                min: 1,
+                max: 5000
             },
             volumetricWidth: {
                 required: true,
                 digits: true,
                 minlength: 1,
-                min: 1
+                min: 1,
+                max: 2000
             },
             volumetricHeight: {
                 required: true,
                 digits: true,
                 minlength: 1,
-                min: 1
+                min: 1,
+                max: 2000
             }
         },
         messages: {
@@ -90,13 +95,16 @@ $(function() {
 		 	},           
            
             volumetricLength: {
-            	required: "Не менше 1 см"
+            	required: "Не менше 1 см",
+            		max:"Не більше 9000 см"
             },
             volumetricWidth: {
-            	required: "Не менше 1 см"
+            	required: "Не менше 1 см",
+            	max:"Не більше 2000 см"
             },
             volumetricHeight: {
-            	required: "Не менше 1 см"
+            	required: "Не менше 1 см",
+            	max:"Не більше 2000 см"
             }
             
         },
