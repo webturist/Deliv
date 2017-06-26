@@ -118,6 +118,8 @@ function pallet(){
 			for(code in arr){
 			$("#tyres > div:last").append("<input>");
 			$("#tyres > div:last > input:eq({i})".replace("{i}", i)).addClass("form-control").attr({"type":"text", "size":30, "name":code,"placeholder":arr[code]});
+			$("#tyres > div:last").append("<span>");
+			$("#tyres > div:last > span:eq({i})".replace("{i}", i)).addClass("help-block").attr({"id":"helpBlock"}).html(arr[code]);
 			i++;
 			}
 			$("#tyres > div > input").wrap("<dt>");
@@ -134,8 +136,11 @@ function cargo(){
 			$("#tyres > div").addClass("form-inline");
 			
 			for(code in arr){
+				
 			$("#tyres > div:last").append("<input>");
 			$("#tyres > div:last > input:eq({i})".replace("{i}", i)).addClass("form-control").attr({"type":"text", "size":30, "name":code,"placeholder":arr[code]});
+			$("#tyres > div:last").append("<span>");
+			$("#tyres > div:last > span:eq({i})".replace("{i}", i)).addClass("help-block").attr({"id":"helpBlock"}).html(arr[code]);
 			i++;
 			}
 			$("#tyres > div > input").wrap("<dt>");
@@ -148,8 +153,17 @@ function documents(){
 			var i = 0;
 			
 			$("#tyres").append("<div>");
-			$("#tyres > div").addClass("form-inline");
+			$("#tyres > div").addClass("form-group").attr({"id":"docblock"});
 			
+			
+			
+			$("#tyres > div:last").append("<input>");
+			$("#tyres > div:last > input").addClass("form-control").attr({"type":"text", "size":30, "name":"seats_amount","placeholder":"Кількість, шт"});
+			$("#tyres > div:last").append("<span>");
+			$("#tyres > div:last > span").addClass("help-block").attr({"id":"helpBlock"}).html("Кількість, шт");
+			
+			$("#tyres > div > inputб #tyres > div:last > span").wrapAll("<dt>");
+			$("#tyres > div > dt").addClass("form-group   myform");
 			$("#tyres > div:last").append("<select>");
 			$("#tyres > div:last > select").addClass("form-control").attr({"name":"weight","id":"docweight"});
 			for (value in arr){
@@ -157,11 +171,4 @@ function documents(){
 				$("#tyres > div:last > select > option:eq({i})".replace("{i}", i)).attr({"value":arr[value]}).html(value);
 				i++;
 			}
-			
-			$("#tyres > div:last").append("<input>");
-			$("#tyres > div:last > input").addClass("form-control").attr({"type":"text", "size":30, "name":"seats_amount","placeholder":"Кількість, шт"});
-			
-			$("#tyres > div > input").wrap("<dt>");
-			$("#tyres > div > dt").addClass("form-group   myform");
-
 };

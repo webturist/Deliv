@@ -38,6 +38,17 @@ th {
     
 }
 
+.form-inline {
+    -moz-column-width: 300px;
+    -webkit-column-width: 300px;
+    column-width: 300px;
+}
+
+.help-block{
+    padding-left: 15px;
+    margin-top: -2px !important;
+}
+
 /* colors for navbar */
 .navbar-default .navbar-brand .blue
 {
@@ -116,6 +127,7 @@ li {
 .next{
     display: inline-block;
 	margin-right:200px;
+	margin-top: 10px;
 
 }
 .delivery_block{
@@ -156,16 +168,17 @@ width: 350px !important;
    
 .myform{
 margin-right:150px;
-margin-bottom:15px!important;
+
 
 }   
 #ServiceType.form-control,#cargoType.form-control,#docweight.form-control{
 height: 35px !important;
 }
 
-#docweight.form-control{
-margin-top: -10px;
+#docblock{
+	display: inline-block;
 }
+
 /* stylize typeahead.js a la http://twitter.github.io/typeahead.js/css/examples.css */
 .tt-menu
 {
