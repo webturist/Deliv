@@ -15,7 +15,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 from flask_jsglue import JSGlue     
 from contextlib import closing 
 import re 
-from app.reserch import Coder
+
 import app.pochta as pochta
 import app.sat as sat
 import app.deliv as deliv
@@ -93,7 +93,7 @@ def show_entries():
             if d["cargoType"]=="TiresWheels":
                 k={}
                 for data in d:
-                    if not re.search(Coder.tires, data):
+                    if not re.search("[-]{1}[0-9]{10}[a-z]{2}$".tires, data):
                         k.update({data:d[data]})
                     elif d[data]:
                         k.update({data:d[data]})
