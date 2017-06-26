@@ -50,73 +50,76 @@ $(function() {
         validClass: "form-input_success"
 		
 		};
-	
-	
-   if ($("#cargoType").val() == "Cargo"){
-    //$( "#ajax_form" ).validate().destroy();
 	var cargo = {
-    	
-    	
-        rules: {
-        	
-            weight: {
-                required: true,
-                digits: true,
-                minlength: 1,
-                min: 0.1,
-                max: 9999
-                
-            },
-            volumetricLength: {
-                required: true,
-                digits: true,
-                minlength: 1,
-                min: 1,
-                max: 5000
-            },
-            volumetricWidth: {
-                required: true,
-                digits: true,
-                minlength: 1,
-                min: 1,
-                max: 2000
-            },
-            volumetricHeight: {
-                required: true,
-                digits: true,
-                minlength: 1,
-                min: 1,
-                max: 2000
-            }
-        },
-        messages: {
-        	weight: {
-	         	required: "Вага не менше 0,1 кг"
-		 	},           
-           
-            volumetricLength: {
-            	required: "Не менше 1 см",
-            		max:"Не більше 9000 см"
-            },
-            volumetricWidth: {
-            	required: "Не менше 1 см",
-            	max:"Не більше 2000 см"
-            },
-            volumetricHeight: {
-            	required: "Не менше 1 см",
-            	max:"Не більше 2000 см"
-            }
-            
-        },
-       
-    };
+	    	
+	    	
+	        rules: {
+	        	
+	            weight: {
+	                required: true,
+	                digits: true,
+	                minlength: 1,
+	                min: 0.1,
+	                max: 9999
+	                
+	            },
+	            volumetricLength: {
+	                required: true,
+	                digits: true,
+	                minlength: 1,
+	                min: 1,
+	                max: 5000
+	            },
+	            volumetricWidth: {
+	                required: true,
+	                digits: true,
+	                minlength: 1,
+	                min: 1,
+	                max: 2000
+	            },
+	            volumetricHeight: {
+	                required: true,
+	                digits: true,
+	                minlength: 1,
+	                min: 1,
+	                max: 2000
+	            }
+	        },
+	        messages: {
+	        	weight: {
+		         	required: "Вага не менше 0,1 кг"
+			 	},           
+	           
+	            volumetricLength: {
+	            	required: "Не менше 1 см",
+	            		max:"Не більше 9000 см"
+	            },
+	            volumetricWidth: {
+	            	required: "Не менше 1 см",
+	            	max:"Не більше 2000 см"
+	            },
+	            volumetricHeight: {
+	            	required: "Не менше 1 см",
+	            	max:"Не більше 2000 см"
+	            }
+	            
+	        },
+	       
+	    };
+	    $.extend(true, cargo, global);
+	    $("#ajax_form").validate(cargo);
+	    	
+	
+	$("#cargoType").change(function(){
+   if ($("#cargoType").val() == "Cargo"){
+    $( "#ajax_form" ).validate().destroy();
+	
     $.extend(true, cargo, global);
     $("#ajax_form").validate(cargo);
     	
     }
-      
+	   
     
-    $("#cargoType").change(function(){
     	if ($(this).val() == "Pallet"){
     	$( "#ajax_form" ).validate().destroy();
     	var pallet = {
@@ -175,10 +178,10 @@ $(function() {
      $.extend(true, pallet, global);
     $("#ajax_form").validate(pallet);
 		}
-    });
     
     
-    $("#cargoType").change(function(){
+    
+    
     	if ($(this).val() == "Documents"){
     	$( "#ajax_form" ).validate().destroy();
     	var Documents = {
@@ -187,10 +190,10 @@ $(function() {
      $.extend(true, Documents, global);
     $("#ajax_form").validate(Documents);
 		}
-    });
+   
     
 
-    $("#cargoType").change(function(){
+    
     	if ($(this).val() == "TiresWheels"){
     	$( "#ajax_form" ).validate().destroy();
     	var TiresWheels = {
