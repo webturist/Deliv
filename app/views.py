@@ -118,7 +118,7 @@ def show_entries():
                   
             return render_template('result.html', d=d,result=result)
         except:
-            return  render_template('404.html')        
+            return  None        
     else:
         return render_template('show_entries.html', entries=entries)
 
@@ -145,6 +145,8 @@ def search():
         place.append(d)    
           
     return jsonify(place)
+    
+    
 
 @app.route('/add', methods=['POST'])
 def add_entry():
@@ -179,9 +181,9 @@ def logout():
     flash('You were logged out')
     return redirect(url_for('show_entries'))
 
-@app.route('/delivery')
-def delivery():
-    return render_template('delivery.html')
+@app.route('/error')
+def error():
+    return render_template('404.html')
     
 
 

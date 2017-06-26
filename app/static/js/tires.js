@@ -56,7 +56,7 @@ $(function() {
 				},
 				error : function(result){
 					$("#loading").removeClass("loading");
-					$("#result").html("Виникла помилка, спробуйте ще");
+					$(".container").load(Flask.url_for("error"));
 					console.log(result);
 					}
 				});
