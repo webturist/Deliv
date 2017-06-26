@@ -6,7 +6,7 @@ import hashlib
 from xml.dom import minidom
 from app.recipe import XmlDictConfig
 import re
-
+from app.reserch import Coder
 
 class API:
     login = "AkhtyrtsevHennadiyAnatoliyovych"
@@ -98,7 +98,7 @@ def cost(d):
     if d["cargoType"]=="TiresWheels":
         
         for data in d:
-            if re.search("[-]{1}[0-9]{10}[a-z]{2}$".tires, data):
+            if re.search(Coder.tires, data):
                 Places_items = ET.SubElement(CalculateShipment, "Places_items")
                 SendingFormat = ET.SubElement(Places_items, "SendingFormat")
                 Quantity = ET.SubElement(Places_items, "Quantity")

@@ -15,12 +15,12 @@
    <tr class="active"> 
    <th scope="row">1</th>
     <td>Нова пошта</td>
-     <td>{{result["nova"]}}</td>
+     <td>{{result["nova"]["Cost"]}} грн.*</td>
       <td><a href="https://novaposhta.ua/delivery" target="_blank">Перевірити на сайті "Нова пошта"</a></td> 
       </tr> 
       <tr class="danger"> <th scope="row">2</th> 
       <td>SAT</td>
-       <td>{{result["sat"]}}</td> 
+       <td>{{result["sat"]["cost"]}} грн.*</td> 
        <td><a href="https://www.sat.ua/new/ru/services/calculate/" target="_blank">Перевірити на сайті "SAT"</a></td> </tr>
         <tr class="success"> 
         <th scope="row">3</th> 
@@ -29,7 +29,7 @@
          <td><a href="https://meest-express.com.ua/ua/calc" target="_blank">Перевірити на сайті "Міст експресс"</a></td> </tr> 
          <tr class="warning"> <th scope="row">4</th>
           <td>Делівері</td> 
-          <td>{{result["delivery"]}}</td> 
+          <td>{{result["delivery"]["allSumma"]}} грн.*</td> 
           <td><a href="http://www.delivery-auto.com.ua/uk-ua/Calculator" target="_blank">Перевірити на сайті "Делівері"</a></td> </tr>
            <tr class="info"> 
            <th scope="row">5</th> 

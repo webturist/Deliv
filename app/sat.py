@@ -81,20 +81,14 @@ def cost(d):
     if d["cargoType"]=="Documents":
         
         cost.update({"weight": d["weight"],"cargoType":"Документы"})       
-    #print(cost)        
+            
     resp = requests.post(
         API.url,
         json.dumps(cost),
         headers={'content-type': 'application/json'},
         ) 
     if resp.json()["success"]:
-        data = resp.json()["data"][0]["cost"]
-        print (str(data)+" грн. *")
-        return str(data)+" грн. *"
-        
+        data = resp.json()["data"][0]
+        return data
     else:
-        print("sat error")  
-        
-if __name__ == '__main__':
-    cost({'city_out': ['Аполлонівка', 'Солонянський', 'Дніпропетровська'], 'city_in': ['Васючин', 'Рогатинський', 'Івано-Франківська'], 'ServiceType': 'DoorsWarehouse', 'cargoType': 'Documents', 'seats_amount': '4', 'weight': '1', 'cost': '4'}
-)           
+        print("sat error")   

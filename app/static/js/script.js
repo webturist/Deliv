@@ -6,7 +6,7 @@ $(function() {
     },
     {
         display: Handlebars.compile(                
-                "{{{City}}}, {{{District}}}, {{{Region}}}"               
+                "{{City}}, {{District}}, {{Region}}"               
             ),
         limit: 20,
         source: search,
@@ -24,7 +24,7 @@ $(function() {
     },
     {
         display: Handlebars.compile(                
-                "{{{City}}}, {{{District}}}, {{{Region}}}"               
+                "{{City}}, {{District}}, {{Region}}"               
             ),
         limit: 20,
         source: search,
@@ -36,7 +36,13 @@ $(function() {
             )
         }
     });
-    
+    // re-center map after place is selected from drop-down
+    $("#out").on("typeahead:selected", function(eventObject, suggestion, name) {
+    //suggestion.city.replace("&#x27;","'");    
+    //console.log(suggestion.City.replace("'","'"));
+    });
+
+   
     
 });
     
