@@ -2,7 +2,7 @@
 import requests
 import json
 import re
-from app.reserch import Coder
+
 
 class API:
     api = {"apiKey": "8c4d695c530e963968190af84ded7bc8"}
@@ -28,78 +28,92 @@ def resp_add(city):
         
         if cur["MainDescription"] == city[0] and cur["Area"] == city[2]: 
             return cur
+    return None        
             
     
 def cost(d):
-    
-    cost = {
-        "modelName": "InternetDocument",
-        "calledMethod": "getDocumentPrice",
-        "methodProperties": {
-        "CitySender": resp_add(d["city_out"])["DeliveryCity"],
-        "CityRecipient": resp_add(d["city_in"])["DeliveryCity"],
-        
-        "ServiceType": d["ServiceType"],
-        "Cost": d["cost"],
-        "CargoType": d["cargoType"],
-        
-        
-            },
-        }
-    if d["cargoType"]=="TiresWheels":
-        k=[]
-        for data in d:
-            if re.search(Coder.tires, data):
-                k.append({"CargoDescription":data,"Amount": d[data]})           
-        
-        cost["methodProperties"].update({"CargoDetails": k})
-        
-    if d["cargoType"]=="Pallet":
-        k=[]
-        try:
-            v = int(d["volumetricWidth"])*int(d["volumetricLength"])*int(d["volumetricHeight"])/1000000
-        except:
-            v = 0    
-        for i in range(int(d["seats_amount"])):
-            k.append({
-                "volumetricVolume": v,
-                "volumetricWidth": d["volumetricWidth"],
-                "volumetricLength": d["volumetricLength"],
-                "volumetricHeight": d["volumetricHeight"],
-                "weight": d["weight"]
-            })           
-        
-          
-        cost["methodProperties"].update({"OptionsSeat": k})
-        
-    if d["cargoType"]=="Cargo":
-        try:
-            v = int(d["volumetricWidth"])*int(d["volumetricLength"])*int(d["volumetricHeight"])/1000000
-        except:
-            v = 0   
-        cost["methodProperties"].update({"OptionsSeat": [{
-                "volumetricVolume": v,
-                "volumetricWidth": d["volumetricWidth"],
-                "volumetricLength": d["volumetricLength"],
-                "volumetricHeight": d["volumetricHeight"],
-                "weight": d["weight"]
-            }]})
-    if d["cargoType"]=="Documents":
-        
-        cost["methodProperties"].update({"Weight": d["weight"]})       
-            
-    cost.update(API.api)
-    #print(cost)
-    resp = requests.post(
-        API.url,
-        json.dumps(cost),
-        headers={'content-type': 'application/json'},
-        ) 
-    if resp.json()["success"]:
-        data = resp.json()["data"][0]
-        return data
+    city_out = resp_add(d["city_out"])
+    city_in = resp_add(d["city_in"])
+    if not city_out:
+        print("В місті відправлення немає відділення НП")
+        return "В місті відправлення немає відділення НП"
+    elif not city_in:
+        print("В місті отримання немає відділення НП")
+        return "В місті отримання немає відділення НП"
     else:
-        print("pochta error")
-        return None
-         
-    
+        cost = {
+            "modelName": "InternetDocument",
+            "calledMethod": "getDocumentPrice",
+            "methodProperties": {
+            "CitySender": city_out["DeliveryCity"],
+            "CityRecipient": city_in["DeliveryCity"],
+            
+            "ServiceType": d["ServiceType"],
+            "Cost": d["cost"],
+            "CargoType": d["cargoType"],
+            
+            
+                },
+            }
+        if d["cargoType"]=="TiresWheels":
+            k=[]
+            for data in d:
+                if re.search("[-]{1}[0-9]{10}[a-z]{2}$".tires, data):
+                    k.append({"CargoDescription":data,"Amount": d[data]})           
+            
+            cost["methodProperties"].update({"CargoDetails": k})
+            
+        if d["cargoType"]=="Pallet":
+            k=[]
+            try:
+                v = int(d["volumetricWidth"])*int(d["volumetricLength"])*int(d["volumetricHeight"])/1000000
+            except:
+                v = 0    
+            for i in range(int(d["seats_amount"])):
+                k.append({
+                    "volumetricVolume": v,
+                    "volumetricWidth": d["volumetricWidth"],
+                    "volumetricLength": d["volumetricLength"],
+                    "volumetricHeight": d["volumetricHeight"],
+                    "weight": d["weight"]
+                })           
+            
+              
+            cost["methodProperties"].update({"OptionsSeat": k})
+            
+        if d["cargoType"]=="Cargo":
+            try:
+                v = int(d["volumetricWidth"])*int(d["volumetricLength"])*int(d["volumetricHeight"])/1000000
+            except:
+                v = 0   
+            cost["methodProperties"].update({"OptionsSeat": [{
+                    "volumetricVolume": v,
+                    "volumetricWidth": d["volumetricWidth"],
+                    "volumetricLength": d["volumetricLength"],
+                    "volumetricHeight": d["volumetricHeight"],
+                    "weight": d["weight"]
+                }]})
+        if d["cargoType"]=="Documents":
+            
+            cost["methodProperties"].update({"Weight": d["weight"]})       
+                
+        cost.update(API.api)
+        #print(cost)
+        resp = requests.post(
+            API.url,
+            json.dumps(cost),
+            headers={'content-type': 'application/json'},
+            ) 
+        
+        if resp.json()["success"]:
+            data = resp.json()["data"][0]["Cost"]
+            print(str(data)+" грн. *")
+            return str(data)+" грн. *"
+            
+        else:
+            print("pochta error")
+            return "На сервері помилка"
+             
+if __name__ == '__main__':
+    cost({'city_out': ["Валер'янівка", 'Рожищенський', 'Волинська'], 'city_in': ['Олішівка', 'Хорошівський', 'Житомирська'], 'ServiceType': 'DoorsDoors', 'cargoType': 'Documents', 'seats_amount': '16', 'weight': '1', 'cost': '1'}
+)    
