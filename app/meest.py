@@ -47,7 +47,7 @@ def resp_add(city):
     #print(resp.text)
     root = ET.XML(resp.text)
     xmldict = XmlDictConfig(root) 
-    #print(xmldict)
+    print(xmldict)
     if xmldict["result_table"] == "\n" or not xmldict["result_table"]:
         return None
     else:
@@ -56,6 +56,17 @@ def resp_add(city):
 def cost(d):
     city_out = resp_add(d["city_out"])
     city_in = resp_add(d["city_in"])
+    try:
+        city_out = city_out[0]
+    except:
+        city_out = city_out
+    try:
+        city_in = city_in[0]
+    except:
+        city_in = city_in    
+    print(city_out)
+    print(city_in)
+    
     if not city_out:
         #print("З цього місця не можливо зробити відправку")
         return "З цього місця не можливо зробити відправку"
@@ -109,7 +120,7 @@ def cost(d):
         if d["cargoType"]=="TiresWheels":
             
             for data in d:
-                if re.search("[-]{1}[0-9]{10}[a-z]{2}$".tires, data):
+                if re.search("[-]{1}[0-9]{10}[a-z]{2}$", data):
                     Places_items = ET.SubElement(CalculateShipment, "Places_items")
                     SendingFormat = ET.SubElement(Places_items, "SendingFormat")
                     Quantity = ET.SubElement(Places_items, "Quantity")
@@ -208,7 +219,7 @@ def cost(d):
         #print(message)
         reparsed = minidom.parseString(message)
         dataXml = reparsed.toxml("utf-8").decode('utf-8')
-        #print (dataXml)
+        print (dataXml)
         
         resp = requests.post(
             API.urlcalck,
@@ -218,7 +229,7 @@ def cost(d):
         
         root = ET.XML(resp.text)
         xmldict = XmlDictConfig(root) 
-        #print(xmldict)
+        print(xmldict)
         if xmldict["result_table"] == "\n":
             #print(xmldict["errors"]["name"].partition("ua:")[2].replace("]",""))
             return xmldict["errors"]["name"].partition("ua:")[2].replace("]","")
@@ -226,5 +237,5 @@ def cost(d):
             return xmldict["result_table"]["items"]["PriceOfDelivery"]+" грн. *"
         
 if __name__ == '__main__':
-    cost({'city_out': ['Львівські Отруби', 'Бериславський', 'Херсонська'], 'city_in': ['Волиця', 'Турійський', 'Волинська'], 'ServiceType': 'DoorsDoors', 'cargoType': 'Cargo', 'weight': '20', 'volumetricLength': '100', 'volumetricWidth': '100', 'volumetricHeight': '100', 'seats_amount': '20', 'cost': '12'}
+    cost({'city_out': ['Суми', 'Сумська', 'Сумська'], 'city_in': ['Київ', 'Київ', 'Київська'], 'ServiceType': 'DoorsDoors', 'cargoType': 'Cargo', 'weight': '10', 'volumetricLength': '100', 'volumetricWidth': '100', 'volumetricHeight': '100', 'seats_amount': '20', 'cost': '100000'}
 )

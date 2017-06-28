@@ -59,7 +59,7 @@ def cost(d):
         if d["cargoType"]=="TiresWheels":
             k=[]
             for data in d:
-                if re.search("[-]{1}[0-9]{10}[a-z]{2}$".tires, data):
+                if re.search("[-]{1}[0-9]{10}[a-z]{2}$", data):
                     k.append({"CargoDescription":data,"Amount": d[data]})           
             
             cost["methodProperties"].update({"CargoDetails": k})

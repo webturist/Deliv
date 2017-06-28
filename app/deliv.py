@@ -54,7 +54,7 @@ def cost(d):
         if arr["cargoType"]=="TiresWheels":
             cost.update({"category": []})
             for data in arr:
-                if re.search("[-]{1}[0-9]{10}[a-z]{2}$".tires, data):
+                if re.search("[-]{1}[0-9]{10}[a-z]{2}$", data):
                     if data == "20f7b625-9add-11e3-b441-0050568002cf" or data == "d7c456cd-aa8b-11e3-9fa0-0050568002cf":
                         cost["category"].append({"categoryId": "f35b5c7d-0cbc-40a0-9713-005142732fc8",
                                                   "countPlace": arr[data],}) #вантажна R 22,5

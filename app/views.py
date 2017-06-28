@@ -81,9 +81,9 @@ def show_entries():
     entries = cur.fetchall()
     if request.method == "POST":
         try:
-            #print(request.get_json)
-            d =dict(request.form)
             
+            d =dict(request.form)
+            #print(d)
             for data in d:
                 d.update({data:d[data][0]})
             d["city_out"] = d["city_out"].split(", ")
@@ -93,7 +93,7 @@ def show_entries():
             if d["cargoType"]=="TiresWheels":
                 k={}
                 for data in d:
-                    if not re.search("[-]{1}[0-9]{10}[a-z]{2}$".tires, data):
+                    if not re.search("[-]{1}[0-9]{10}[a-z]{2}$", data):
                         k.update({data:d[data]})
                     elif d[data]:
                         k.update({data:d[data]})
@@ -110,10 +110,8 @@ def show_entries():
                 satcost = sat.cost(d)
             except:
                 satcost = "Помилка на сервері САТ"    
-            try:
-                meestex = meest.cost(d)
-            except:
-                meestex = "Помилка на сервері Міст Експресс"
+           
+            meestex = "Помилка на сервері Міст Експресс"
             try:    
                 delcost = deliv.cost(d)
             except:

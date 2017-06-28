@@ -6,7 +6,8 @@ import re
 
 class API:
     api = {"apiKey": ""}
-    url = 'http://urm.sat.ua/openws/hs/api/v1.0/calc/json'
+    url2 = 'https://api.sat.ua/v1.0/calc/json'
+    url = "http://urm.sat.ua/openws/hs/api/v1.0/calc/json"
     regionru = {"Івано-Франківська":    "Ивано-Франковская область",
 "Волинська"    :"Волынская область",
 "Вінницька":    "Винницкая область",
@@ -65,7 +66,35 @@ def cost(d):
             cost.update({"delivery":"true"})
                     
         if d["cargoType"]=="TiresWheels":
-            print("OK")
+            
+            for data in d:
+                if re.search("[-]{1}[0-9]{10}[a-z]{2}$", data):
+                    if data == "20f7b625-9add-11e3-b441-0050568002cf" or data == "d7c456cd-aa8b-11e3-9fa0-0050568002cf":
+                        cost.update({"cargoType":"гКолеса22",
+                                                  "seatsAmount": d[data],}) #вантажна R 22,5
+                    elif data == "20f7b628-9add-11e3-b441-0050568002cf" or data == "d7c456cc-aa8b-11e3-9fa0-0050568002cf":
+                        cost.update({"cargoType":"гКолеса20",
+                                                  "seatsAmount": d[data],}) #вантажна R 20
+                    elif data == "20f7b627-9add-11e3-b441-0050568002cf" or data == "d7c456cb-aa8b-11e3-9fa0-0050568002cf":
+                        cost.update({"cargoType":"гКолеса19",
+                                                  "seatsAmount": d[data],})#вантажна R 19,5
+                    elif data == "20f7b626-9add-11e3-b441-0050568002cf" or data == "d7c456ca-aa8b-11e3-9fa0-0050568002cf":
+                        cost.update({"cargoType":"гКолеса17",
+                                                  "seatsAmount": d[data],}) #вантажна R 17,5
+                    elif data == "d7c456c5-aa8b-11e3-9fa0-0050568002cf" or data == "d7c456cf-aa8b-11e3-9fa0-0050568002cf": 
+                        cost.update({"cargoType":"лКолеса10",
+                                                  "seatsAmount": d[data],}) #легкова R 13-14
+                    elif data == "d7c456d0-aa8b-11e3-9fa0-0050568002cf" or data == "d7c456c6-aa8b-11e3-9fa0-0050568002cf":
+                        cost.update({"cargoType":"лКолеса15",
+                                                  "seatsAmount": d[data],}) #легкова R 15-16
+                    elif data == "d7c456c7-aa8b-11e3-9fa0-0050568002cf" or data == "d7c456d1-aa8b-11e3-9fa0-0050568002cf": 
+                        cost.update({"cargoType":"лКолеса18",
+                                                  "seatsAmount": d[data],}) #легковые R17,5-19
+                    else:
+                        cost.update({"cargoType":"лКолеса19",
+                                                  "seatsAmount": d[data],}) #легковые R19,5-22    
+            
+        
                 
         if d["cargoType"]=="Cargo":
             try:
@@ -88,7 +117,7 @@ def cost(d):
                 cost.update({
                     "cargoType":"ПосылкаM"
                 }) 
-            elif int(d["weight"]) <= 10:
+            elif int(d["weight"]) < 10:
                 cost.update({
                     "cargoType":"ПосылкаL"
                 })
@@ -117,7 +146,7 @@ def cost(d):
         if d["cargoType"]=="Documents":
             
             cost.update({"weight": d["weight"],"cargoType":"Документы"})       
-        #print(cost)        
+        print(cost)        
         resp = requests.post(
             API.url,
             json.dumps(cost),
@@ -125,11 +154,12 @@ def cost(d):
             ) 
         if resp.json()["success"]:
             data = resp.json()["data"][0]["cost"]
-            #print (str(data)+" грн. *")
+            print (str(data)+" грн. *")
             return str(data)+" грн. *"
             
         else:
             print("sat error")  
             
 if __name__ == '__main__':
-    cost({'city_out': ['Суми', 'Сумська', 'Сумська'], 'city_in': ['Київ', 'Київ', 'Київська'], 'ServiceType': 'DoorsDoors', 'cargoType': 'Documents', 'seats_amount': '1', 'weight': '1', 'cost': '1'})           
+    cost({'city_out': ['Суми', 'Сумська', 'Сумська'], 'city_in': ['Полтава', 'Полтавська', 'Полтавська'], 'ServiceType': 'DoorsDoors', 'cargoType': 'TiresWheels', 'd7c456c7-aa8b-11e3-9fa0-0050568002cf': '1', 'cost': '1'}
+)           

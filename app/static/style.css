@@ -1,3 +1,9 @@
+body{
+	background-image:url(/static/unnamed.jpg);
+    background-size: cover;
+}
+    
+
 
 #loading {
     visibility: hidden;
@@ -38,15 +44,26 @@ th {
     
 }
 
+.navbar{
+	    border: 0px!important;
+	    border-radius: 20px!important;
+    padding: 10px;
+    box-shadow: inset -1px 1px 12px 3px rgba(0,0,0,0.5);
+}
+
 .form-inline {
     -moz-column-width: 300px;
     -webkit-column-width: 300px;
     column-width: 300px;
+    text-shadow: 1px 1px rgba(4, 4, 4, 0.78), 0 0 1em #378286;
+    color: #fdfdfd;
 }
 
 .help-block{
     padding-left: 15px;
     margin-top: -2px !important;
+        text-shadow: 1px 1px 2px black, 0 0 1em #378286;
+            color: #fffbfb!important;
 }
 
 /* colors for navbar */
@@ -90,6 +107,7 @@ main td
  .valid{
  float: left;
      margin: 10px;
+     text-shadow: 1px 1px rgba(253, 232, 232, 0.68), 0 0 0em #378286;
  }
 
 
@@ -156,7 +174,7 @@ width: 350px !important;
     background: #fff;
     border-radius: 7px;
     border: 1px solid rgba(0,0,0,0.15);
-    box-shadow: 0 1px 1px rgba(50,50,50,0.1);
+    box-shadow:  3px 4px 5px 0px rgba(0,0,0,.075)!important;
     cursor: pointer;
     outline: none;
 
@@ -177,6 +195,15 @@ height: 35px !important;
 
 #docblock{
 	display: inline-block;
+}
+
+
+
+.bg-primary,.bg-danger{
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
 /* stylize typeahead.js a la http://twitter.github.io/typeahead.js/css/examples.css */
