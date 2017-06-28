@@ -102,11 +102,22 @@ def show_entries():
                 
             print(d)
                 
-                        
-            novapochta = pochta.cost(d)
-            satcost = sat.cost(d)
-            meestex = meest.cost(d)
-            delcost = deliv.cost(d)
+            try:            
+                novapochta = pochta.cost(d)
+            except:
+                novapochta = "Помилка на сервері НП"    
+            try:
+                satcost = sat.cost(d)
+            except:
+                satcost = "Помилка на сервері САТ"    
+            try:
+                meestex = meest.cost(d)
+            except:
+                meestex = "Помилка на сервері Міст Експресс"
+            try:    
+                delcost = deliv.cost(d)
+            except:
+                delcost = "Помилка на сайті Делівері"    
             
             print(novapochta)
             print(satcost)

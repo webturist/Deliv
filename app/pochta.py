@@ -27,6 +27,7 @@ def resp_add(city):
     for cur in data:
         
         if cur["MainDescription"] == city[0] and cur["Area"] == city[2]: 
+            
             return cur
     return None        
             
@@ -35,11 +36,11 @@ def cost(d):
     city_out = resp_add(d["city_out"])
     city_in = resp_add(d["city_in"])
     if not city_out:
-        print("В місті відправлення немає відділення НП")
-        return "В місті відправлення немає відділення НП"
+        #print("З цього місця не можливо зробити відправку")
+        return "З цього місця не можливо зробити відправку"
     elif not city_in:
-        print("В місті отримання немає відділення НП")
-        return "В місті отримання немає відділення НП"
+        #print("В це місце не можливо зробити доставку")
+        return "В це місце не можливо зробити доставку"
     else:
         cost = {
             "modelName": "InternetDocument",
@@ -107,13 +108,13 @@ def cost(d):
         
         if resp.json()["success"]:
             data = resp.json()["data"][0]["Cost"]
-            print(str(data)+" грн. *")
+            #print(str(data)+" грн. *")
             return str(data)+" грн. *"
             
         else:
-            print("pochta error")
+            #print("pochta error")
             return "На сервері помилка"
              
 if __name__ == '__main__':
-    cost({'city_out': ["Валер'янівка", 'Рожищенський', 'Волинська'], 'city_in': ['Олішівка', 'Хорошівський', 'Житомирська'], 'ServiceType': 'DoorsDoors', 'cargoType': 'Documents', 'seats_amount': '16', 'weight': '1', 'cost': '1'}
+    cost({'city_out': ['Львівські Отруби', 'Бериславський', 'Херсонська'], 'city_in': ['Волиця', 'Турійський', 'Волинська'], 'ServiceType': 'DoorsDoors', 'cargoType': 'Cargo', 'weight': '20', 'volumetricLength': '100', 'volumetricWidth': '100', 'volumetricHeight': '100', 'seats_amount': '20', 'cost': '12'}
 )    

@@ -3,98 +3,133 @@
 import requests
 import json
 import re
-from app.reserch import Coder
+
 class API:
     api = {"apiKey": ""}
     url = 'http://urm.sat.ua/openws/hs/api/v1.0/calc/json'
+    regionru = {"Івано-Франківська":    "Ивано-Франковская область",
+"Волинська"    :"Волынская область",
+"Вінницька":    "Винницкая область",
+"Дніпропетровська":    "Днепропетровская область",
+"Донецька"    :"Донецкая область",
+"Житомирська"    :"Житомирская область",
+"Закарпатська"    :"Закарпатская область",
+"Запорізька"    :"Запорожская область",
+"Київська"    :"Киевская область",
+"Кіровоградська":    "Кировоградская область",
+"Луганська":    "Луганская область",
+"Львівська"    :"Львовская область",
+"Миколаївська":    "Николаевская область",
+"Одеська"    :"Одесская область",
+"Полтавська"    :"Полтавськая область",
+"Рівненська"    :"Ровенская область",
+"Сумська"    :"Сумская область",
+"Тернопільська":    "Тернопольская область",
+"Харківська":    "Харьковская область",
+"Херсонська":    "Херсонская область",
+"Хмельницька":    "Хмельницкая область",
+"Черкаська"    :"Черкасская область",
+"Чернівецька":    "Черновицкая область",
+"Чернігівська":    "Черниговская область"}
 def resp_add(city):
     response = requests.get('https://api.sat.ua/v1.0/main/json/getTowns?searchString={}'.format(city[0]))
-    data = response.json()["data"][0]
-    
-    return data
+    if response.json()["success"]:
+        data = response.json()["data"]
+        for cur in data:
+            for i in API.regionru.values():
+                if cur["region"] == i:
+                    return cur
+        return None
 def cost(d):
-    
-    cost = {
-        "ID": "123",
-        "townSender": resp_add(d["city_out"])["ref"],
-        "townRecipient":  resp_add(d["city_in"])["ref"],
-        "declaredCost":d["cost"]
-        }
- 
-    if d["ServiceType"] == "DoorsDoors":
-        cost.update({"departure":"true","delivery":"true"})
-    if d["ServiceType"] == "DoorsWarehouse":
-        cost.update({"departure":"true"})        
-    if d["ServiceType"] == "WarehouseDoors":
-        cost.update({"delivery":"true"})
+    city_out = resp_add(d["city_out"])
+    city_in = resp_add(d["city_in"])
+    if not city_out:
+        #print("З цього місця не можливо зробити відправку")
+        return "З цього місця не можливо зробити відправку"
+    elif not city_in:
+        #print("В це місце не можливо зробити доставку")
+        return "В це місце не можливо зробити доставку"
+    else:
+        cost = {
+            "ID": "123",
+            "townSender": city_out["ref"],
+            "townRecipient":  city_in["ref"],
+            "declaredCost":d["cost"]
+            }
+     
+        if d["ServiceType"] == "DoorsDoors":
+            cost.update({"departure":"true","delivery":"true"})
+        if d["ServiceType"] == "DoorsWarehouse":
+            cost.update({"departure":"true"})        
+        if d["ServiceType"] == "WarehouseDoors":
+            cost.update({"delivery":"true"})
+                    
+        if d["cargoType"]=="TiresWheels":
+            print("OK")
                 
-    if d["cargoType"]=="TiresWheels":
-        print("OK")
-            
-    if d["cargoType"]=="Cargo":
-        try:
-            v = int(d["volumetricWidth"])*int(d["volumetricLength"])*int(d["volumetricHeight"])/1000000
-        except:
-            v = 0 
-        cost.update({"volumeGeneral": v,
-                    "width": d["volumetricWidth"],
+        if d["cargoType"]=="Cargo":
+            try:
+                v = int(d["volumetricWidth"])*int(d["volumetricLength"])*int(d["volumetricHeight"])/1000000
+            except:
+                v = 0 
+            cost.update({"volumeGeneral": v,
+                        "width": d["volumetricWidth"],
+                        "length": d["volumetricLength"],
+                        "height": d["volumetricHeight"],
+                        "weight": d["weight"],
+                        "seatsAmount":d["seats_amount"],
+                     })   
+                  
+            if int(d["weight"]) <= 2:
+                cost.update({
+                    "cargoType":"ПосылкаS"
+                })
+            elif int(d["weight"]) <= 5:
+                cost.update({
+                    "cargoType":"ПосылкаM"
+                }) 
+            elif int(d["weight"]) <= 10:
+                cost.update({
+                    "cargoType":"ПосылкаL"
+                })
+            else:        
+                cost.update({
+                        "cargoType":"Стандарт"
+                    })
+      
+        if d["cargoType"]=="Pallet":
+             
+            try:
+                width = int(d["volumetricWidth"])*int(d["seats_amount"])
+                weight = int(d["weight"])*int(d["seats_amount"])
+                v = width*int(d["volumetricLength"])*int(d["volumetricHeight"])/1000000
+            except:
+                v = 0   
+            cost.update({
+                    "volumeGeneral": v,
+                    "width": str(width),
                     "length": d["volumetricLength"],
                     "height": d["volumetricHeight"],
-                    "weight": d["weight"],
-                    "seatsAmount":d["seats_amount"],
-                 })   
-              
-        if int(d["weight"]) <= 2:
-            cost.update({
-                "cargoType":"ПосылкаS"
-            })
-        elif int(d["weight"]) <= 5:
-            cost.update({
-                "cargoType":"ПосылкаM"
-            }) 
-        elif int(d["weight"]) <= 10:
-            cost.update({
-                "cargoType":"ПосылкаL"
-            })
-        else:        
-            cost.update({
-                    "cargoType":"Стандарт"
-                })
-  
-    if d["cargoType"]=="Pallet":
-         
-        try:
-            width = int(d["volumetricWidth"])*int(d["seats_amount"])
-            weight = int(d["weight"])*int(d["seats_amount"])
-            v = width*int(d["volumetricLength"])*int(d["volumetricHeight"])/1000000
-        except:
-            v = 0   
-        cost.update({
-                "volumeGeneral": v,
-                "width": str(width),
-                "length": d["volumetricLength"],
-                "height": d["volumetricHeight"],
-                "weight": str(weight),
-                "cargoType":"Стандарт",
-                "seatsAmount":d["seats_amount"]
-            })   
-    if d["cargoType"]=="Documents":
-        
-        cost.update({"weight": d["weight"],"cargoType":"Документы"})       
-    #print(cost)        
-    resp = requests.post(
-        API.url,
-        json.dumps(cost),
-        headers={'content-type': 'application/json'},
-        ) 
-    if resp.json()["success"]:
-        data = resp.json()["data"][0]["cost"]
-        print (str(data)+" грн. *")
-        return str(data)+" грн. *"
-        
-    else:
-        print("sat error")  
-        
+                    "weight": str(weight),
+                    "cargoType":"Стандарт",
+                    "seatsAmount":d["seats_amount"]
+                })   
+        if d["cargoType"]=="Documents":
+            
+            cost.update({"weight": d["weight"],"cargoType":"Документы"})       
+        #print(cost)        
+        resp = requests.post(
+            API.url,
+            json.dumps(cost),
+            headers={'content-type': 'application/json'},
+            ) 
+        if resp.json()["success"]:
+            data = resp.json()["data"][0]["cost"]
+            #print (str(data)+" грн. *")
+            return str(data)+" грн. *"
+            
+        else:
+            print("sat error")  
+            
 if __name__ == '__main__':
-    cost({'city_out': ['Аполлонівка', 'Солонянський', 'Дніпропетровська'], 'city_in': ['Васючин', 'Рогатинський', 'Івано-Франківська'], 'ServiceType': 'DoorsWarehouse', 'cargoType': 'Documents', 'seats_amount': '4', 'weight': '1', 'cost': '4'}
-)           
+    cost({'city_out': ['Суми', 'Сумська', 'Сумська'], 'city_in': ['Київ', 'Київ', 'Київська'], 'ServiceType': 'DoorsDoors', 'cargoType': 'Documents', 'seats_amount': '1', 'weight': '1', 'cost': '1'})           
