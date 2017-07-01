@@ -110,8 +110,10 @@ def show_entries():
                 satcost = sat.cost(d)
             except:
                 satcost = "Помилка на сервері САТ"    
-           
-            meestex = "Помилка на сервері Міст Експресс"
+            try:
+                meestex = meest.cost(d)
+            except:		
+                meestex = "Помилка на сервері Міст Експресс"
             try:    
                 delcost = deliv.cost(d)
             except:
@@ -143,7 +145,7 @@ def search():
     temp = db.execute("""SELECT *
                             FROM ua
                             WHERE city LIKE ?
-                            GROUP BY Region
+                            GROUP BY District
                             LIMIT 20""", [q])    
     
     place =[]

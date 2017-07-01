@@ -47,7 +47,7 @@ def resp_add(city):
     #print(resp.text)
     root = ET.XML(resp.text)
     xmldict = XmlDictConfig(root) 
-    print(xmldict)
+    #print(xmldict)
     if xmldict["result_table"] == "\n" or not xmldict["result_table"]:
         return None
     else:
@@ -64,8 +64,8 @@ def cost(d):
         city_in = city_in[0]
     except:
         city_in = city_in    
-    print(city_out)
-    print(city_in)
+    #print(city_out)
+    #print(city_in)
     
     if not city_out:
         #print("З цього місця не можливо зробити відправку")

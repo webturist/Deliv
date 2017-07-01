@@ -1,6 +1,8 @@
 body{
 	background-image:url(/static/unnamed.jpg);
     background-size: cover;
+        background-repeat: no-repeat;
+    background-color: #11141b!important;
 }
     
 

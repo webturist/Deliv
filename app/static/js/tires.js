@@ -53,6 +53,7 @@ $(function() {
 				success : function(result){
 				$("#loading").removeClass("loading");	
 				$("#result").html(result);
+				$('html, body').animate({ scrollTop: $("#result").offset().top }, 500);
 				},
 				error : function(result){
 					$("#loading").removeClass("loading");
