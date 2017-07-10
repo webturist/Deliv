@@ -183,6 +183,8 @@ def cost(d):
                     SendingFormat.text = "NST"      
                 if int(d["cost"])*int(d["seats_amount"]) < 5000*int(d["seats_amount"]):
                     Insurance.text = str(5000*int(d["seats_amount"]))
+                else:
+                    Insurance.text = d["cost"]
                 Volume.text = str(v)
                 Weight.text = str(w)
             Quantity.text = d["seats_amount"]
@@ -237,5 +239,4 @@ def cost(d):
             return xmldict["result_table"]["items"]["PriceOfDelivery"]+" грн. *"
         
 if __name__ == '__main__':
-    cost({'city_out': ['Суми', 'Сумська', 'Сумська'], 'city_in': ['Київ', 'Київ', 'Київська'], 'ServiceType': 'DoorsDoors', 'cargoType': 'Cargo', 'weight': '10', 'volumetricLength': '100', 'volumetricWidth': '100', 'volumetricHeight': '100', 'seats_amount': '20', 'cost': '100000'}
-)
+    cost( {'cargoType': 'Pallet', 'volumetricWidth': '80', 'city_in': ['Суми', 'Сумська', 'Сумська'], 'weight': '500', 'cost': '4999', 'volumetricLength': '100', 'city_out': ['Одеса', 'Одеська', 'Одеська'], 'ServiceType': 'WarehouseWarehouse', 'seats_amount': '1', 'volumetricHeight': '150'})
