@@ -17,7 +17,7 @@ from contextlib import closing
 import re 
 
 import app.pochta as pochta
-import app.sat as sat
+import app.sat2 as sat
 import app.deliv as deliv
 import app.meest as meest
 
