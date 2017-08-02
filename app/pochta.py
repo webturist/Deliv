@@ -18,11 +18,21 @@ def resp_add(city):
             }
         }    
     address.update(API.api)
-    resp = requests.post(
-        API.url,
-        json.dumps(address),
-        headers={'content-type': 'application/json'},
+    try:
+        resp = requests.post(
+            API.url,
+            json.dumps(address),
+            headers={'content-type': 'application/json'},
+            timeout=(2, 2)
         ) 
+    except requests.exceptions.ReadTimeout:
+        return "Помилка серверу ReadTimeout"
+    except requests.exceptions.ConnectTimeout:
+        return "Помилка серверу ConnectTimeout" 
+    except requests.exceptions.ConnectionError:
+        return "Помилка серверу ConnectionError"
+    except requests.exceptions.HTTPError:  
+        return "Помилка серверу HTTPError"
     data = resp.json()["data"][0]["Addresses"]
     for cur in data:
         
@@ -100,12 +110,21 @@ def cost(d):
                 
         cost.update(API.api)
         #print(cost)
-        resp = requests.post(
-            API.url,
-            json.dumps(cost),
-            headers={'content-type': 'application/json'},
+        try:
+            resp = requests.post(
+                API.url,
+                json.dumps(cost),
+                headers={'content-type': 'application/json'},
+                timeout=(2, 2)
             ) 
-        
+        except requests.exceptions.ReadTimeout:
+            return "Помилка серверу ReadTimeout"
+        except requests.exceptions.ConnectTimeout:
+            return "Помилка серверу ConnectTimeout" 
+        except requests.exceptions.ConnectionError:
+            return "Помилка серверу ConnectionError"
+        except requests.exceptions.HTTPError:  
+            return "Помилка серверу HTTPError"
         if resp.json()["success"]:
             data = resp.json()["data"][0]["Cost"]
             #print(str(data)+" грн. *")

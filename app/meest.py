@@ -39,11 +39,21 @@ def resp_add(city):
     dataXml = reparsed.toxml("utf-8").decode('utf-8')
     #print (dataXml)
     
-    resp = requests.post(
-        API.url,
-        dataXml.encode('utf-8'),
-        headers={'Content-Type': 'application/xml'},
-        ) 
+    try:
+        resp = requests.post(
+            API.url,
+            dataXml.encode('utf-8'),
+            headers={'Content-Type': 'application/xml'},
+            timeout=(2, 2)
+            ) 
+    except requests.exceptions.ReadTimeout:
+        return "Помилка серверу ReadTimeout"
+    except requests.exceptions.ConnectTimeout:
+        return "Помилка серверу ConnectTimeout" 
+    except requests.exceptions.ConnectionError:
+        return "Помилка серверу ConnectionError"
+    except requests.exceptions.HTTPError:  
+        return "Помилка серверу HTTPError"    
     #print(resp.text)
     root = ET.XML(resp.text)
     xmldict = XmlDictConfig(root) 
@@ -222,13 +232,21 @@ def cost(d):
         reparsed = minidom.parseString(message)
         dataXml = reparsed.toxml("utf-8").decode('utf-8')
         print (dataXml)
-        
-        resp = requests.post(
-            API.urlcalck,
-            dataXml.encode('utf-8'),
-            headers={'Content-Type': 'application/xml'},
-            ) 
-        
+        try:
+            resp = requests.post(
+                API.urlcalck,
+                dataXml.encode('utf-8'),
+                headers={'Content-Type': 'application/xml'},
+                timeout=(2, 2)
+                ) 
+        except requests.exceptions.ReadTimeout:
+            return "Помилка серверу ReadTimeout"
+        except requests.exceptions.ConnectTimeout:
+            return "Помилка серверу ConnectTimeout" 
+        except requests.exceptions.ConnectionError:
+            return "Помилка серверу ConnectionError"
+        except requests.exceptions.HTTPError:  
+            return "Помилка серверу HTTPError"
         root = ET.XML(resp.text)
         xmldict = XmlDictConfig(root) 
         print(xmldict)

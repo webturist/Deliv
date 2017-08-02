@@ -32,7 +32,16 @@ class API:
 "Чернівецька":    "Черновицкая область",
 "Чернігівська":    "Черниговская область"}
 def resp_add(city):
-    response = requests.get('https://api.sat.ua/v1.0/main/json/getTowns?searchString={}'.format(city[0]))
+    try:
+        response = requests.get('https://api.sat.ua/v1.0/main/json/getTowns?searchString={}'.format(city[0]),timeout=(2, 2))
+    except requests.exceptions.ReadTimeout:
+        return "Помилка серверу ReadTimeout"
+    except requests.exceptions.ConnectTimeout:
+        return "Помилка серверу ConnectTimeout" 
+    except requests.exceptions.ConnectionError:
+        return "Помилка серверу ConnectionError"
+    except requests.exceptions.HTTPError:  
+        return "Помилка серверу HTTPError"    
     if response.json()["success"]:
         data = response.json()["data"]
         for cur in data:
@@ -137,7 +146,16 @@ def cost(d):
     'user-agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"
         }     
         querystring = {"do":"calculate"}  
-        response = requests.request("POST", API.url, data=cost, headers=headers, params=querystring)
+        try:
+            response = requests.request("POST", API.url, data=cost, headers=headers, params=querystring,timeout=(4, 4))
+        except requests.exceptions.ReadTimeout:
+            return "Помилка серверу ReadTimeout"
+        except requests.exceptions.ConnectTimeout:
+            return "Помилка серверу ConnectTimeout" 
+        except requests.exceptions.ConnectionError:
+            return "Помилка серверу ConnectionError"
+        except requests.exceptions.HTTPError:  
+            return "Помилка серверу HTTPError"    
         if response:
             soup = BeautifulSoup(response.text, "lxml")
             try:

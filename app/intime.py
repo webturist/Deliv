@@ -2,19 +2,53 @@
 
 import requests
 import xml.etree.ElementTree as ET
-import hashlib
 from xml.dom import minidom
 from app.recipe import XmlDictConfig
 import re
-from app.reserch import Coder
+
 from zeep import Client
 
 
 class API:
     key = "94726845460001224437"
-    url = 'https://ws.intime.ua/API/ws/API20/?wsdl'
+    url = 'http://esb.intime.ua:8080/services/intime_api_3.0?wsdl'
+    
     
 def resp_add(city):
+    session = requests.Session()
+    response = session.get('https://intime.ua/ua-calc')
+    if not response:
+        return None
+    else:
+        try:
+            response = session.get('https://intime.ua/get-cities/{}'.format(city[0]),timeout=(2, 2))
+        except requests.exceptions.ReadTimeout:
+            return "Помилка серверу ReadTimeout"
+        except requests.exceptions.ConnectTimeout:
+            return "Помилка серверу ConnectTimeout" 
+        except requests.exceptions.ConnectionError:
+            return "Помилка серверу ConnectionError"
+        except requests.exceptions.HTTPError:  
+            return "Помилка серверу HTTPError"    
+        data = response.json()
+        if not data:
+            return None
+        else:
+            for cur in data:
+                if cur["name"] == city[0] and cur["area"].partition(" область")[0] == city[2]: 
+                    return cur    
+                    print(cur)
+ 
+def cost(d):
+    city_out = resp_add(d["city_out"])
+    city_in = resp_add(d["city_in"])
+    print(city_out)
+    print(city_in)
+    client = Client(API.url)
+    response = client.service['declaration_calculate'](api_key=API.key)
+    
+    
+        
     """
     ###################### формируем xml  ############
     # создаем документ
@@ -39,32 +73,13 @@ def resp_add(city):
     reparsed = minidom.parseString(message)
     dataXml = reparsed.toxml("utf-8").decode('utf-8')
     #print (dataXml)
-   """
-    resp = requests.post(
-        API.url,"""
-     <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api2="http://www.reality.sh/in-time/Api20" xmlns:int="http://inr.intime.ua/in-time/integration20">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <api2:AllCatalog>
-         <api2:AllCatalogRequest>
-            <int:Auth>
-               <int:ID>380503273621</int:ID>
-               <int:KEY>94726845460001224437</int:KEY>
-            </int:Auth>
-         </api2:AllCatalogRequest>
-      </api2:AllCatalog>
-   </soapenv:Body>
-</soapenv:Envelope>""",
-        headers={"Accept-Encoding": "gzip,deflate",
-            'Content-Type': 'application/soap+xml',
-                 "SOAPAction":"http://www.reality.sh/in-time/Api20#API20:AllCatalog",
-                 "Connection": "Keep-Alive"},
-        ) 
-    #print(resp.text)
+   
+    
     root = ET.XML(resp.text)
     xmldict = XmlDictConfig(root) 
     print(xmldict)
+    """
     
 
 if __name__ == '__main__':
-    resp_add(1)
+    cost( {'cargoType': 'Pallet', 'volumetricWidth': '80', 'city_in': ['Суми', 'Сумська', 'Сумська'], 'weight': '500', 'cost': '4999', 'volumetricLength': '100', 'city_out': ['Одеса', 'Одеська', 'Одеська'], 'ServiceType': 'WarehouseWarehouse', 'seats_amount': '1', 'volumetricHeight': '150'})

@@ -9,7 +9,16 @@ class API:
     url = 'http://www.delivery-auto.com/api/v4/Public/PostReceiptCalculate'
 
 def resp_add(city):
-    response = requests.get('http://www.delivery-auto.com/api/v4/Public/GetAreasList?culture=uk-UA&fl_all=true&country=1')
+    try:
+        response = requests.get('http://www.delivery-auto.com/api/v4/Public/GetAreasList?culture=uk-UA&fl_all=true&country=1', timeout=(2, 2))
+    except requests.exceptions.ReadTimeout:
+        return "Помилка серверу ReadTimeout"
+    except requests.exceptions.ConnectTimeout:
+        return "Помилка серверу ConnectTimeout" 
+    except requests.exceptions.ConnectionError:
+        return "Помилка серверу ConnectionError"
+    except requests.exceptions.HTTPError:  
+        return "Помилка серверу HTTPError"
     if response.json()["status"]:
         
         data = response.json()["data"]
@@ -129,11 +138,21 @@ def cost(d):
                 
         
         print(cost)
-        resp = requests.post(
-            API.url,
-            json.dumps(cost),
-            headers={'content-type': 'application/json'},
-            ) 
+        try:
+            resp = requests.post(
+                API.url,
+                json.dumps(cost),
+                headers={'content-type': 'application/json'},
+                timeout=(3, 3)
+                ) 
+        except requests.exceptions.ReadTimeout:
+            return "Помилка серверу ReadTimeout"
+        except requests.exceptions.ConnectTimeout:
+            return "Помилка серверу ConnectTimeout" 
+        except requests.exceptions.ConnectionError:
+            return "Помилка серверу ConnectionError"
+        except requests.exceptions.HTTPError:  
+            return "Помилка серверу HTTPError"    
         if resp.json()["status"]:
             data = resp.json()["data"]["allSumma"]
             print(data)
